@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import BootstrapTest from "./BootstrapTest";
 import {Button} from './App';
 import styled from 'styled-components';
 // import reportWebVitals from './reportWebVitals';
@@ -13,11 +14,12 @@ const BigButton = styled(Button)`
 `
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-      <BigButton as="a">Отправить отчёт</BigButton>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <App/>
+        <BigButton as="a">Отправить отчёт</BigButton>
+        <BootstrapTest />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
