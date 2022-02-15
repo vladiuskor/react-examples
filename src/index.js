@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import BootstrapTest from "./BootstrapTest";
 import {Button} from './App';
 import styled from 'styled-components';
 // import reportWebVitals from './reportWebVitals';
@@ -17,7 +16,6 @@ ReactDOM.render(
     <React.StrictMode>
         <App/>
         <BigButton as="a">Отправить отчёт</BigButton>
-        <BootstrapTest />
     </React.StrictMode>,
     document.getElementById('root')
 );
