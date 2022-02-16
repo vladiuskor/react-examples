@@ -9,20 +9,21 @@ const EmpItem = styled.div`
   padding: 20px;
   margin-bottom: 15px;
   border-radius: 5px;
-  box-shadow: 5px 5px 10px rgba(0,0,0, 0.2);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+
   a {
     display: block;
     margin: 10px 0;
     color: ${props => props.active ? 'orange' : 'black'};
   }
-  
+
   input {
     display: block;
     margin-top: 10px;
   }
 `;
 
-const Header = styled.h2 `
+const Header = styled.h2`
   font-size: 22px;
 `;
 
@@ -30,8 +31,8 @@ export const Button = styled.button`
   display: block;
   padding: 5px 15px;
   background-color: gold;
-  border: 1px solid rgba(0,0,0, 0.2);
-  box-shadow: 5px 5px 10px rgba(0,0,0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 `
 
 // Functional component (in the React beginning - they couldn't have a state)
@@ -55,14 +56,14 @@ class WhoAmI extends Component {
     }
 
     incrementYear = () => {
-        this.setState( state => {
+        this.setState(state => {
             return {years: state.years + 1}
         })
     }
 
     commitInputChanges = (e, color) => {
         console.log(color)
-        this.setState( {position: e.target.value});
+        this.setState({position: e.target.value});
     }
 
     render() {
@@ -74,8 +75,8 @@ class WhoAmI extends Component {
                 <Header>My name is {name}, surname - {surname}, age - {years}, position - {position}</Header>
                 <a href={link}>My profile</a>
                 <form>
-                <span>Введите должность</span>
-                <input type="text" onChange={(e) => this.commitInputChanges(e, 'red')} />
+                    <span>Введите должность</span>
+                    <input type="text" onChange={(e) => this.commitInputChanges(e, 'red')}/>
                 </form>
             </EmpItem>
         )
@@ -93,37 +94,82 @@ const DynamicGreating = (props) => {
             {/*{props.children}*/}
 
             {
-               React.Children.map(props.children, child => {
-                   return React.cloneElement(child, {className: 'shadow p-3 m-3 border rounded'})
-               })
+                React.Children.map(props.children, child => {
+                    return React.cloneElement(child, {className: 'shadow p-3 m-3 border rounded'})
+                })
             }
         </div>
     )
 }
 
+const HelloGreating = () => {
+    return (
+        <div style={{'width': '600px', 'margin': '0 auto'}}>
+            <DynamicGreating color={'primary'}>
+                <h2>Hello world!</h2>
+            </DynamicGreating>
+        </div>
+    )
+}
+
+const Message = (props) => {
+    return (
+        <h2>The counter is {props.counter}</h2>
+    )
+}
+
+class Counter extends Component {
+    state = {
+        counter: 0
+    }
+
+    changeCounter = () => {
+        this.setState({
+            counter: this.state.counter + 1
+        })
+    }
+
+    render() {
+        return(
+            <>
+                <button
+                    className={'btn btn-primary mb-2'}
+                    onClick={this.changeCounter}>
+                    Click me!
+                </button>
+                {this.props.render(this.state.counter)}
+            </>
+        )
+    }
+}
+
 
 function App() {
-  return (
-    <Wrapper>
+    return (
+        <Wrapper>
+            <Counter render={ counter => (
+                <Message counter={counter}/>
+            )}/>
 
-        <BootstrapTest
-            left={
-                <DynamicGreating color={'primary'}>
-                    <h2>This wheel was hard</h2>
-                    <h2>Hello world!</h2>
-                </DynamicGreating>
-            }
-            right={
-                <DynamicGreating color={'primary'}>
-                    <h2>Right!</h2>
-                </DynamicGreating>
-            }
-        />
+            <HelloGreating />
+            <BootstrapTest
+                left={
+                    <DynamicGreating color={'primary'}>
+                        <h2>This wheel was hard</h2>
+                        <h2>Hello world!</h2>
+                    </DynamicGreating>
+                }
+                right={
+                    <DynamicGreating color={'primary'}>
+                        <h2>Right!</h2>
+                    </DynamicGreating>
+                }
+            />
 
-        <WhoAmI name="Vlad" surname="Korobko" link="facebook.com"/>
-        <WhoAmI name="Roma" surname="Korobko" link="instagram.com"/>
-    </Wrapper>
-  );
+            <WhoAmI name="Vlad" surname="Korobko" link="facebook.com"/>
+            <WhoAmI name="Roma" surname="Korobko" link="instagram.com"/>
+        </Wrapper>
+    );
 }
 
 export default App;
