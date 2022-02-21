@@ -1,13 +1,18 @@
-import {useState} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import {Container} from 'react-bootstrap';
 import './App.css';
 
+const Slider = () => {
 
-const Slider = (props) => {
-
-    const [slide, setSlider ] = useState(0);
+    const [slide, setSlider] = useState(0);
     const [autoplay, setAutoplay] = useState(false);
 
+    const getSomeImages = useCallback(() => {
+            console.log('fetching');
+            return [
+                'https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg',
+                'https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg'
+            ]}, [])
 
     //Example with complex state. Less readable/ Not recommended
     // const [state, setState] = useState({slide: 0, autoplay: false});
@@ -36,29 +41,48 @@ const Slider = (props) => {
     return (
         <Container>
             <div className="slider w-50 m-auto">
-                <img className="d-block w-100" src="https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg" alt="slide" />
+
+                <Slide getSomeImages={getSomeImages} />
+
                 <div className="text-center mt-5">Active slide {slide} <br/> {autoplay ? 'auto' : null}</div>
                 <div className="buttons mt-3">
                     <button
                         className="btn btn-primary me-2"
-                        onClick={() => changeSlide(-1)}>-1</button>
+                        onClick={() => changeSlide(-1)}>-1
+                    </button>
                     <button
                         className="btn btn-primary me-2"
-                        onClick={() => changeSlide(1)}>+1</button>
+                        onClick={() => changeSlide(1)}>+1
+                    </button>
                     <button
                         className="btn btn-primary me-2"
-                        onClick={toggleAutoplay}>toggle autoplay</button>
+                        onClick={toggleAutoplay}>toggle autoplay
+                    </button>
                 </div>
             </div>
         </Container>
     )
 }
 
+function Slide ({getSomeImages}) {
+    const [images, setImages] = useState([]);
+
+    useEffect(() => {
+        setImages(getSomeImages())
+    }, [getSomeImages])
+
+    return (
+        <>
+            {images.map((url, index) =>  <img key={index} className="d-block w-100" src={url} alt="slide" />)}
+        </>
+    )
+}
+
 
 function App() {
-  return (
+    return (
         <Slider/>
-  );
+    );
 }
 
 export default App;
