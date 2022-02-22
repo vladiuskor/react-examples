@@ -1,174 +1,63 @@
-import React, {Component} from "react";
-import styled from "styled-components";
-import BootstrapTest from "./BootstrapTest";
-
+import { useState, useEffect} from 'react';
+import {Container} from 'react-bootstrap';
 import './App.css';
 
+function useInputWithValidate(initialValue) {
+    const [value, setValue] = useState(initialValue);
 
-const EmpItem = styled.div`
-  padding: 20px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-
-  a {
-    display: block;
-    margin: 10px 0;
-    color: ${props => props.active ? 'orange' : 'black'};
-  }
-
-  input {
-    display: block;
-    margin-top: 10px;
-  }
-`;
-
-const Header = styled.h2`
-  font-size: 22px;
-`;
-
-export const Button = styled.button`
-  display: block;
-  padding: 5px 15px;
-  background-color: gold;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
-`
-
-// Functional component (in the React beginning - they couldn't have a state)
-
-// function WhoAmI1({name, surname, link}) {
-//     return(
-//         <div>
-//             <h1>My name is {name}, surname - {surname}</h1>
-//             <a href={link}>My profile</a>
-//         </div>
-//     )
-// }
-
-class WhoAmI extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            years: 27,
-            position: ''
-        }
+    const onChange = event => {
+        setValue(event.target.value);
     }
 
-    incrementYear = () => {
-        this.setState(state => {
-            return {years: state.years + 1}
-        })
+    const validateInput = () => {
+        return value.search(/\d/) >=0
     }
 
-    commitInputChanges = (e, color) => {
-        console.log(color)
-        this.setState({position: e.target.value});
-    }
-
-    render() {
-        const {name, surname, link} = this.props;
-        const {position, years} = this.state
-        return (
-            <EmpItem active>
-                <Button onClick={this.incrementYear}>+++</Button>
-                <Header>My name is {name}, surname - {surname}, age - {years}, position - {position}</Header>
-                <a href={link}>My profile</a>
-                <form>
-                    <span>Введите должность</span>
-                    <input type="text" onChange={(e) => this.commitInputChanges(e, 'red')}/>
-                </form>
-            </EmpItem>
-        )
-    }
+    return {value, onChange, validateInput}
 }
 
-const Wrapper = styled.div`
-  width: 600px;
-  margin: 80px auto 0 auto;
-`
+const Form = () => {
+    // const [text, setText] = useState('');
+    // const [textArea, setTextArea] = useState('');
 
-const DynamicGreating = (props) => {
+    const input = useInputWithValidate('');
+    const textArea = useInputWithValidate('');
+
+    const color = input.validateInput() ? 'text-danger' : null;
+
     return (
-        <div className={'mb-3 p-3 border border-' + props.color}>
-            {/*{props.children}*/}
-
-            {
-                React.Children.map(props.children, child => {
-                    return React.cloneElement(child, {className: 'shadow p-3 m-3 border rounded'})
-                })
-            }
-        </div>
+        <Container>
+            <form className="w-50 border mt-5 p-3 m-auto">
+                <div className="mb-3">
+                    <input value={`${input.value} / ${textArea.value}`} type="text" className="form-control" readOnly/>
+                    <label htmlFor="exampleFormControlInput1" className="form-label mt-3">Email address</label>
+                    <input
+                        onChange={input.onChange}
+                        type="email"
+                        value={input.value}
+                        className={`form-control ${color}`}
+                        id="exampleFormControlInput1"
+                        placeholder="name@example.com"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="exampleFormControlTextarea1" className="form-label">Example textarea</label>
+                    <textarea
+                        onChange={textArea.onChange}
+                        value={textArea.value}
+                        className="form-control"
+                        id="exampleFormControlTextarea1"
+                        rows="3"
+                    ></textarea>
+                </div>
+            </form>
+        </Container>
     )
 }
-
-const HelloGreating = () => {
-    return (
-        <div style={{'width': '600px', 'margin': '0 auto'}}>
-            <DynamicGreating color={'primary'}>
-                <h2>Hello world!</h2>
-            </DynamicGreating>
-        </div>
-    )
-}
-
-const Message = (props) => {
-    return (
-        <h2>The counter is {props.counter}</h2>
-    )
-}
-
-class Counter extends Component {
-    state = {
-        counter: 0
-    }
-
-    changeCounter = () => {
-        this.setState({
-            counter: this.state.counter + 1
-        })
-    }
-
-    render() {
-        return(
-            <>
-                <button
-                    className={'btn btn-primary mb-2'}
-                    onClick={this.changeCounter}>
-                    Click me!
-                </button>
-                {this.props.render(this.state.counter)}
-            </>
-        )
-    }
-}
-
 
 function App() {
     return (
-        <Wrapper>
-            <Counter render={ counter => (
-                <Message counter={counter}/>
-            )}/>
-
-            <HelloGreating />
-            <BootstrapTest
-                left={
-                    <DynamicGreating color={'primary'}>
-                        <h2>This wheel was hard</h2>
-                        <h2>Hello world!</h2>
-                    </DynamicGreating>
-                }
-                right={
-                    <DynamicGreating color={'primary'}>
-                        <h2>Right!</h2>
-                    </DynamicGreating>
-                }
-            />
-
-            <WhoAmI name="Vlad" surname="Korobko" link="facebook.com"/>
-            <WhoAmI name="Roma" surname="Korobko" link="instagram.com"/>
-        </Wrapper>
+        <Form/>
     );
 }
 
